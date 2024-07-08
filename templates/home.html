@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+   <div class="jumbotron text-center">
+     <h1>Welcome to Digital Learning Platform</h1>
+     <p class="lead"> This application is built on the Python Flask Framework and MySQL Database </p>
+     <!--If user is not logged in the button will be shown-->
+     {% if session.logged_in == NULL %} 
+        <a href="/register" class="btn btn-primary btn-lg">Register</a> <!--"btn-lg" = make the button bigger-->
+        <a href="/login" class="btn btn-success btn-lg">Login</a>
+     {% endif %}
+   </div>
+{% endblock %}

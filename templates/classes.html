@@ -1,0 +1,127 @@
+{% extends 'includes/_navbar.html' %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="row">
+    <!-- Content goes here -->
+    <div class="col-md-12">
+        <h2>Class List 
+            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassModal">Add Class</button>
+        </h2>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            {% for class in classes %}
+            <div class="card" style="width: 20rem;">
+                <img class="card-img-top" src="static/images/class.avif" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Class Name: {{ class.classname }}</h5>
+                    <p class="card-text">Class Code: {{ class.classcode }}</p>
+                    <p class="card-text">Class Section: {{ class.classsection }}</p>
+                    <p class="card-text">Instructor: {{ instructor_first_name }} {{ instructor_last_name }}</p>
+                    <div class="btn-group">
+                        <a href="" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editClassModal_{{ class.id }}">Edit</a>
+                        <!-- Adding space between buttons -->
+                        <span>&nbsp;</span>
+                        <a href="{{ url_for('delete', id=class.id) }}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-primary btn-sm">Delete</a>
+                        <!-- Adding space between buttons -->
+                        <span>&nbsp;</span>
+                        <!-- Adding the new "Go" button -->
+                        <button class="btn btn-primary btn-sm">Go</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Content ends here -->
+    </div>
+</div>
+
+<!-- Add Class Modal -->
+<div id="addClassModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary">Add New Class</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('insert') }}" method="POST">
+                    <div class="form-group">
+                        <label>Class Name</label>
+                        <input type="text" name="classname" class="form-control" placeholder="Enter Class Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Class Code</label>
+                        <input type="text" name="classcode" class="form-control" placeholder="Enter Class Code">
+                    </div>
+                    <div class="form-group">
+                        <label>Class Section</label>
+                        <input type="text" name="classsection" class="form-control" placeholder="Enter Class Section">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Class</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Add Class Modal -->
+
+{% for class in classes %}
+<!-- Edit Class Modal -->
+<div id="editClassModal_{{ class.id }}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary">Edit Class</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('update') }}" method="POST">
+                    <input type="hidden" name="id" value="{{ class.id }}">
+                    <div class="form-group">
+                        <label for="edit-classname_{{ class.id }}">Class Name</label>
+                        <input type="text" id="edit-classname_{{ class.id }}" name="classname" value="{{ class.classname }}" class="form-control" placeholder="Enter Class Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-classcode_{{ class.id }}">Class Code</label>
+                        <input type="text" id="edit-classcode_{{ class.id }}" name="classcode" value="{{ class.classcode }}" class="form-control" placeholder="Enter Class Code">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-classcode_{{ class.id }}">Class Section</label>
+                        <input type="text" id="edit-classsection_{{ class.id }}" name="classcode" value="{{ class.classsection }}" class="form-control" placeholder="Enter Class Section">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Class</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Edit Class Modal -->
+{% endfor %}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% endblock %}
